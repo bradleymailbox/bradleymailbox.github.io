@@ -1,0 +1,71 @@
+/* bDevStudios site: dark "bDev Neon" look shared with Eleventy1111.
+   Fonts are served from here (not Google Fonts) so visiting the privacy page sends nothing to third parties. */
+@font-face { font-family: "Lilita One"; src: url("fonts/LilitaOne-Regular.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("fonts/OpenSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("fonts/OpenSans-Semibold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+:root {
+  --bg: #0e0f15;
+  --bg-mid: #171a26;
+  --bg-top: #232b44;
+  --panel: #1e2130;
+  --panel-stroke: #2e3348;
+  --text: #f4f6fb;
+  --muted: #8b93a7;
+  --cyan: #2ee6f0;
+  --orange: #ff8a1f;
+  --orange-deep: #ff6a00;
+  --display: "Lilita One", system-ui, sans-serif;
+  --body: "Open Sans", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--bg); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font: 400 16px/1.6 var(--body);
+  background: radial-gradient(ellipse 90% 60% at 50% 0%, var(--bg-top) 0%, var(--bg-mid) 55%, var(--bg) 100%) no-repeat;
+}
+
+main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+
+a { color: var(--cyan); }
+a:hover { color: var(--orange); }
+
+.brand { display: flex; justify-content: center; margin: 8px 0 24px; }
+.brand img { width: min(280px, 70vw); height: auto; border-radius: 18px; }
+
+h1, h2 { font-family: var(--display); font-weight: 400; letter-spacing: 0.5px; }
+h1 { font-size: clamp(34px, 8vw, 52px); line-height: 1.1; margin: 0 0 8px; text-align: center; }
+h1 .accent { color: var(--cyan); text-shadow: 3px 4px 0 var(--orange-deep); }
+h2 { font-size: 26px; color: var(--cyan); margin: 36px 0 8px; }
+
+.lede { text-align: center; color: var(--muted); margin: 0 0 32px; }
+
+.panel {
+  background: var(--panel);
+  border: 1.5px solid var(--panel-stroke);
+  border-radius: 22px;
+  padding: 20px 22px;
+}
+
+.game { display: flex; gap: 18px; align-items: center; text-decoration: none; color: inherit; }
+.game img { width: 88px; height: 88px; border-radius: 20px; flex: none; }
+.game h2 { margin: 0; }
+.game p { margin: 4px 0 0; color: var(--muted); }
+.links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; }
+
+table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--panel-stroke); vertical-align: top; }
+th { font-family: var(--display); font-weight: 400; color: var(--orange); letter-spacing: 0.5px; }
+.table-wrap { overflow-x: auto; }
+
+ul { padding-left: 22px; }
+li { margin: 4px 0; }
+
+.meta { color: var(--muted); text-align: center; margin: 0 0 28px; }
+
+footer { margin-top: 48px; text-align: center; color: var(--muted); font-size: 14px; }
