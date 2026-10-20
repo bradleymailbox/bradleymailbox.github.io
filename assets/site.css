@@ -56,6 +56,7 @@ h2 { font-size: 26px; color: var(--cyan); margin: 36px 0 8px; }
 .game img { width: 88px; height: 88px; border-radius: 20px; flex: none; }
 .game h2 { margin: 0; }
 .game p { margin: 4px 0 0; color: var(--muted); }
+.game + .game { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--panel-stroke); }
 .links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; }
 
 table { width: 100%; border-collapse: collapse; margin: 8px 0; }
