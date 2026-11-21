@@ -38,3 +38,57 @@
     startX = null;
   });
 })();
+
+// Home hero: the phones take turns in the spotlight. Pauses on hover and in background tabs; click a side phone to
+// bring it forward. Skipped for reduced motion, where the static fan stays.
+(function () {
+  var art = document.querySelector(".hero-art");
+  if (!art) return;
+  var phones = Array.prototype.slice.call(art.querySelectorAll(".phone"));
+  if (phones.length < 2 || !window.matchMedia || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var slots = phones.length === 2 ? ["slot-left", "slot-center"] : ["slot-left", "slot-center", "slot-right"];
+  phones = phones.slice(0, slots.length);
+  var n = slots.length;
+  var offset = 0;
+  var timer = null;
+  var hovering = false;
+  var DELAY = 3400;
+
+  function slotOf(i, off) { return ((i - off) % n + n) % n; }
+
+  function apply(next) {
+    phones.forEach(function (p, i) {
+      var from = slotOf(i, offset), to = slotOf(i, next);
+      if (Math.abs(to - from) > 1) {
+        // Wrapping round the back: fade out, move, fade in.
+        p.classList.add("crossing");
+        setTimeout(function () { p.classList.remove("crossing"); }, 550);
+      }
+      slots.forEach(function (s) { p.classList.remove(s); });
+      p.classList.add(slots[to]);
+    });
+    offset = next;
+  }
+
+  function step() { apply(offset + 1); }
+  function start() { stop(); if (!hovering && !document.hidden) timer = setInterval(step, DELAY); }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+  apply(0);
+  art.classList.add("is-rotating");
+  start();
+
+  phones.forEach(function (p, i) {
+    p.addEventListener("click", function () {
+      var center = slots.indexOf("slot-center");
+      var cur = slotOf(i, offset);
+      if (cur === center) return;
+      apply(offset + (cur - center));
+      start();
+    });
+  });
+  art.addEventListener("mouseenter", function () { hovering = true; stop(); });
+  art.addEventListener("mouseleave", function () { hovering = false; start(); });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else start(); });
+})();

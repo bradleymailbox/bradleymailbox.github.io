@@ -121,6 +121,35 @@ main.page { max-width: none; margin: 0; padding: 0; }
 }
 @media (max-width: 420px) { .hero-art { height: 320px; } .phone { width: 130px; } .phone-1 { width: 150px; } .stats { gap: 24px; } }
 
+/* Rotating hero: site.js adds .is-rotating and moves the slot classes round, so each title takes the spotlight in
+   turn. Without JS (or with reduced motion) the static fan above is used. */
+.hero-art.is-rotating { --side-x: 25%; --side-y: 60px; --tilt: 9deg; --side-scale: .9; }
+.hero-art.is-rotating .phone {
+  left: var(--x); right: auto; top: 0; width: 250px;
+  transform: translateX(-50%) translateY(var(--y)) rotate(var(--r)) scale(var(--s));
+  transition: left .9s cubic-bezier(.65, 0, .35, 1), transform .9s cubic-bezier(.65, 0, .35, 1),
+              filter .9s ease, opacity .45s ease, box-shadow .9s ease;
+  cursor: pointer;
+}
+.hero-art.is-rotating .slot-center {
+  --x: 50%; --y: 0px; --r: 0deg; --s: 1; z-index: 3; filter: none;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, .55), 0 0 0 1px var(--panel-stroke), 0 0 46px rgba(46, 230, 240, .28);
+  cursor: default;
+}
+.hero-art.is-rotating .slot-left { --x: var(--side-x); --y: var(--side-y); --r: calc(-1 * var(--tilt)); --s: var(--side-scale); z-index: 2; filter: brightness(.62) saturate(.8); }
+.hero-art.is-rotating .slot-right { --x: calc(100% - var(--side-x)); --y: var(--side-y); --r: var(--tilt); --s: var(--side-scale); z-index: 2; filter: brightness(.62) saturate(.8); }
+/* The phone wrapping round from left to right slips behind the others. */
+.hero-art.is-rotating .phone.crossing { z-index: 1; opacity: .15; }
+.hero-art.is-rotating .phone:not(.slot-center):hover { filter: brightness(.85) saturate(.95); }
+@media (max-width: 900px) {
+  .hero-art.is-rotating { --side-x: 27%; --side-y: 50px; }
+  .hero-art.is-rotating .phone { width: 180px; }
+}
+@media (max-width: 420px) {
+  .hero-art.is-rotating { --side-x: 24%; --side-y: 44px; --side-scale: .86; }
+  .hero-art.is-rotating .phone { width: 150px; }
+}
+
 /* ---------- sections ---------- */
 .section { padding: 72px 0; }
 .section-tight { padding: 28px 0; }
