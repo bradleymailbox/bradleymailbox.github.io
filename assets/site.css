@@ -138,8 +138,12 @@ main.page { max-width: none; margin: 0; padding: 0; }
 }
 .hero-art.is-rotating .slot-left { --x: var(--side-x); --y: var(--side-y); --r: calc(-1 * var(--tilt)); --s: var(--side-scale); z-index: 2; filter: brightness(.62) saturate(.8); }
 .hero-art.is-rotating .slot-right { --x: calc(100% - var(--side-x)); --y: var(--side-y); --r: var(--tilt); --s: var(--side-scale); z-index: 2; filter: brightness(.62) saturate(.8); }
-/* The phone wrapping round from left to right slips behind the others. */
+/* Waiting their turn: tucked behind the spotlight phone, invisible. */
+.hero-art.is-rotating .slot-hidden { --x: 50%; --y: 30px; --r: 0deg; --s: .78; z-index: 0; opacity: 0; filter: brightness(.5); pointer-events: none; }
+/* The phone wrapping round from left to right (three titles) slips behind the others. */
 .hero-art.is-rotating .phone.crossing { z-index: 1; opacity: .15; }
+/* Without the script only the first three phones make the static fan. */
+.hero-art:not(.is-rotating) .phone:nth-child(n+4) { display: none; }
 .hero-art.is-rotating .phone:not(.slot-center):hover { filter: brightness(.85) saturate(.95); }
 @media (max-width: 900px) {
   .hero-art.is-rotating { --side-x: 27%; --side-y: 50px; }

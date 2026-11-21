@@ -39,52 +39,58 @@
   });
 })();
 
-// Home hero: the phones take turns in the spotlight. Pauses on hover and in background tabs; click a side phone to
-// bring it forward. Skipped for reduced motion, where the static fan stays.
+// Home hero: every live title takes a turn in the spotlight, three phones on show at a time. Pauses on hover and in
+// background tabs; click a side phone to bring it forward. Skipped for reduced motion, where the static fan stays.
 (function () {
   var art = document.querySelector(".hero-art");
   if (!art) return;
   var phones = Array.prototype.slice.call(art.querySelectorAll(".phone"));
-  if (phones.length < 2 || !window.matchMedia || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var n = phones.length;
+  if (n < 2 || !window.matchMedia || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  var slots = phones.length === 2 ? ["slot-left", "slot-center"] : ["slot-left", "slot-center", "slot-right"];
-  phones = phones.slice(0, slots.length);
-  var n = slots.length;
-  var offset = 0;
+  var SLOTS = ["slot-left", "slot-center", "slot-right", "slot-hidden"];
+  var DELAY = 3400;
+  // Start where the static fan is: phone 1 in the middle (phone 0 when there are only two).
+  var focus = n >= 3 ? 1 : 0;
   var timer = null;
   var hovering = false;
-  var DELAY = 3400;
 
-  function slotOf(i, off) { return ((i - off) % n + n) % n; }
+  // Slot for phone i: the focused one in the middle, its neighbours either side, the rest hidden behind.
+  function slotOf(i, f) {
+    var rel = ((i - f) % n + n) % n;
+    if (rel === 0) return "slot-center";
+    if (rel === 1) return "slot-right";
+    if (rel === n - 1) return "slot-left";
+    return "slot-hidden";
+  }
 
-  function apply(next) {
+  function apply(next, first) {
     phones.forEach(function (p, i) {
-      var from = slotOf(i, offset), to = slotOf(i, next);
-      if (Math.abs(to - from) > 1) {
-        // Wrapping round the back: fade out, move, fade in.
+      var from = slotOf(i, focus), to = slotOf(i, next);
+      if (!first && ((from === "slot-left" && to === "slot-right") || (from === "slot-right" && to === "slot-left"))) {
+        // Jumping across the front (only with three titles): fade it while it moves behind.
         p.classList.add("crossing");
         setTimeout(function () { p.classList.remove("crossing"); }, 550);
       }
-      slots.forEach(function (s) { p.classList.remove(s); });
-      p.classList.add(slots[to]);
+      SLOTS.forEach(function (s) { p.classList.remove(s); });
+      p.classList.add(to);
     });
-    offset = next;
+    focus = ((next % n) + n) % n;
   }
 
-  function step() { apply(offset + 1); }
-  function start() { stop(); if (!hovering && !document.hidden) timer = setInterval(step, DELAY); }
+  function start() { stop(); if (!hovering && !document.hidden) timer = setInterval(function () { apply(focus + 1); }, DELAY); }
   function stop() { if (timer) { clearInterval(timer); timer = null; } }
 
-  apply(0);
+  apply(focus, true);
   art.classList.add("is-rotating");
   start();
 
   phones.forEach(function (p, i) {
     p.addEventListener("click", function () {
-      var center = slots.indexOf("slot-center");
-      var cur = slotOf(i, offset);
-      if (cur === center) return;
-      apply(offset + (cur - center));
+      var slot = slotOf(i, focus);
+      if (slot === "slot-left") apply(focus - 1);
+      else if (slot === "slot-right") apply(focus + 1);
+      else return;
       start();
     });
   });
